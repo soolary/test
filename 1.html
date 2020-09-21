@@ -1,0 +1,1850 @@
+<%@page import="org.apache.xmlbeans.impl.xb.xsdschema.Public"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.BufferedReader,java.io.InputStreamReader"%>
+<%@ include file="../common/taglib.jsp"%>
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!--浏览器兼容性设置-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+        <!-- 样式start -->
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/bootstrap.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/fonts/iconfont.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/line-style.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/normalize.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/component.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/common.css" />
+		<link rel="stylesheet" href="<%=basePath %>resources/bigData/css/customize.css" />
+		<!-- 扇形菜单样式 -->
+		<link rel="stylesheet" type="text/css" href="<%=basePath %>resources/ace/assets/css/component2.css" />
+		<!-- 样式end -->
+        <script type="text/javascript" src="<%=basePath %>resources/bigData/js/jquery.min.js"></script>
+        <script type="text/javascript" src="<%=basePath%>resources/bigData/echarts/echarts.min.js"></script>
+        <script type="text/javascript" src="<%=basePath%>resources/gis3d/examples/js/china.js"></script>
+        <script type="text/javascript" src="<%=basePath %>resources/bigData/spot.js"></script>
+        <script type="text/javascript" src="<%=basePath %>resources/bigData/laydate/laydate.js"></script>
+       
+        <!--程序自定义样式-->
+        <!-- 自己写的CSS，请放在这里 -->
+        <style type="text/css">
+            html,body {
+                overflow: hidden;
+                height: 100%;
+                width: 100%;
+                min-width: 1366px;
+            }
+            
+            /**区域设备实时监控样式start**/
+           	.ffcs_table_device_monitor{
+           		table-layout: fixed;
+           	}
+           	.ffcs_table_device_monitor td{
+           		white-space:nowrap;
+           		overflow:hidden;
+           		text-overflow: ellipsis;
+           	}
+            /**区域设备实时监控样式end**/
+			
+			/**天气图标样式**/
+			.tianqi-icon{ width: .75rem; height: .75rem; vertical-align: middle; margin-top: -.05rem;}
+			/* 游客日程表数据*/
+			.content-wrap .column2 .cont .map-chart{ float: right;}
+            .content-wrap .column2 .cont .chart-data{ float: right;}
+            .content-wrap .column2 .cont .select-input{ width: 1rem; margin: .13rem auto 0 auto;  position: relative;}
+            .content-wrap .column2 .cont .select-input input{ height: 22px; width: 1rem; color: #fff; line-height: 22px; text-align: center; border: 1px solid #07a6ff; border-radius:5px ; background: url(<%=basePath %>resources/bigData/images/icon1.png) 94% center no-repeat;}
+            .content-wrap .column2 .cont .select-input .select-list{ width: 100%;  display: none; min-height: 80px; max-height: 100px; overflow: hidden; position: absolute; left: 0; top: 29px; z-index: 9; background: #fff;}
+            .content-wrap .column2 .cont .select-input .select-list ul li a{ color: #333; display: block; padding:2px 10px;}
+            .content-wrap .column2 .cont .select-input .select-list ul li:hover a{ background: #1e90ff; color: #fff;}
+       
+              
+            .pagination > li > a, .pagination > li > span{ border: 1px solid #07a7ff;}
+            .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus{ color: #fff; background: #0a3e7c;}
+            .pagination > li > a, .pagination > li > span{ background: #0a3e7c; color: #fff;}
+            
+            .content-wrap .column2 .cont .select-input{float: left;margin-right: 5px;}
+            .content-wrap .column3 .cont .chart-data {
+			    position: absolute;
+			    top: 40px;
+			    right: 10px;
+			}
+			.content-wrap .column3 .cont .select-input {
+		    	float: right;
+		    	margin-right: 5px;
+		    }
+		    .content-wrap .column3 .cont .gender .icon-wrap{
+		    	margin-left: 0px;
+		    }
+		    
+		    
+		    .csstransforms .cn-wrapper li{
+	    		margin-top: 2.9em;
+	            margin-left: -8.5em;
+	            width: 9.5em;
+	    		height: 8em;
+	    	}
+	    	.csstransforms .cn-wrapper li a{
+	    		background: radial-gradient(transparent 35%, #075083 35%);
+	    	}
+	    	.csstransforms .cn-wrapper li a:hover,
+			.csstransforms .cn-wrapper li a:active,
+			.csstransforms .cn-wrapper li a:focus {
+				background: -webkit-radial-gradient(transparent 35%, #23d6e9 35%);
+				background: -moz-radial-gradient(transparent 35%, #23d6e9 35%);
+				background: radial-gradient(transparent 35%, #23d6e9 35%);
+				
+			}
+			.cn-wrapper  ul li a span{
+				cursor: pointer;
+			}
+			.cn-wrapper  ul li a span img:hover{
+				transform: scale(1.35); 
+			}
+			.return-btn{position:absolute; left: .3rem; bottom: .4rem; z-index: 99;}
+			
+			
+        </style>
+        <script type="text/javascript" src="<%=basePath%>resources/framework/script/jquery.form.js"></script>
+        <script src="<%=basePath%>resources/ace/assets/js/modernizr-2.6.2.min.js"></script><!--扇形菜单的js-->
+		<script src="<%=basePath%>resources/ace/assets/js/polyfills.js"></script><!--扇形菜单的js-->
+        
+        <script type="text/javascript">
+        	/***公共layer弹出框 ***start***/
+			var dialogs = new Array();
+			var dialogDoms = new Array();
+			// 新建窗口
+			function openDialog(title, url, width, height) {
+				var _width = width + 'px';
+                var _height = height + 'px';
+				layer.open({
+					  type: 2,
+					  title: title,
+					  shadeClose: false,
+					  skin:'layer-ext-yourskin',
+					  shade: 0.8,
+					  area: [_width, _height],
+					  content: [url, 'yes'],
+					  success: function(layero, index) {
+							dialogs.push(index);
+							
+							var iframeWin = window[layero.find('iframe')[0]['name']];
+							dialogDoms.push(iframeWin);
+					  }
+					});
+						
+			}
+			
+			// 关闭窗口
+			function closeDialog(msg) {
+				if (msg != null) {
+                	layer.msg(msg);
+				}
+				
+				dialogDoms.pop();
+				var index = dialogs.pop();
+				layer.close(index);
+			}
+			// 获取上一个弹出框
+			function getLastDialog(){
+				var lastWin = dialogDoms[dialogDoms.length-2];
+				return lastWin;
+			}
+			/***公共layer弹出框 ***end***/
+        </script>
+        
+        <script type="text/javascript">
+        var getDutyUserTimer = null;//值班人员
+        var weatherTimer = null;//天气定时器
+		var touristCurrentTimer = null; // 游客数量定时器
+		
+		var provinceMapTimer = null;//省份数据定时器
+		var getCarFlowChartsTimer = null;//车流量定时器
+		var scenicCalendarChartsTimer = null;// 日历定时器
+		var getScenicByYearTimer = null;//热门景点定时器
+		
+		var CarFlowClom = 'IN_FLOW';  //车流量,查询入口数据
+		var CarFlowType = 1 ;         //初始化车流量查询日期类型
+		var ArticleChartstype = 'day';
+		var cYear = '${currentYear}';
+		var cMonth = '${currentMonth}';
+		
+		var governmentNoticeTimer; // 通知公告定时器
+        $(function(){
+           initData();
+           init();
+           var button = document.getElementById('cn-button'),
+		    wrapper = document.getElementById('cn-wrapper');
+		
+			var open = false;
+			button.addEventListener('click', handler, false);
+		
+			function handler(){
+			  if(!open){
+			    classie.add(wrapper, 'opened-nav');
+			  }
+			  else{
+			   
+				classie.remove(wrapper, 'opened-nav');
+			  }
+			  open = !open;
+			}
+			function closeWrapper(){
+				classie.remove(wrapper, 'opened-nav');
+			}
+        });
+        
+        
+        function initData(){
+        	$("#calendarYear").val('${currentYear}'+'年');
+        	$("#provinceYear").val('${currentYear}'+'年');
+        	$("#provinceMonth").val('${currentMonth}'+'月');
+        	$("#calendarMonth").val('${currentMonth}'+'月');
+        	$("#agesMonth").val('${currentMonth}'+'月');
+        	$("#scenicSelYear").val('${currentYear}');
+        }
+        
+      	//获取值班领导、没有的话取登录用户
+        function getDutyUser(){
+      	  $.ajax({
+                url : "<%=basePath%>staff/dutyManage/getCurrentDutyUser",
+                type : "get",
+                //data : {},
+                cache: false,
+                datatype : "json",
+                success : function(result, textStatus) {
+                   if(result!=null){
+                  	 var name = result.nickname;
+                  	 var tel = result.tel;
+                  	 $('#dutyUserName').html(name);
+                  	 $('#dutyUserTel').html(tel);
+                   }
+                },
+                complete : function(XMLHttpRequest, textStatus) {
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        }
+        
+        //初始化加载方法
+        function init(){
+        	
+            getDutyUser();
+            getDutyUserTimer = window.setInterval(getDutyUser, 1000*60*60);
+        	
+        	// 通知公告获取最新5条数据--5分钟获取一次
+        	getGovernmentNotice();
+        	
+            //车流量获取
+            getCarFlowCharts(CarFlowClom,CarFlowType);
+            getCarFlowChartsTimer = window.setInterval(getCarFlowChartsTimeFun, 1000*10);
+            
+            //舆情统计图获取
+            getArticleCharts(ArticleChartstype);
+            getArticleChartsTimer = window.setInterval(getArticleChartsTimeFun, 1000*10);
+            //舆情定时器
+            getNewArticleDataTimer = window.setInterval(getNewArticleData, 1000*60);
+           // getResourceContent(0);
+            // 日历定时器
+            getScenicCalendarCharts(cYear, cMonth);
+            scenicCalendarChartsTimer = window.setInterval(getScenicCalendarCharts, 1000*60);
+            
+            // 统计游客数量
+            getAgesDatas(null);
+            
+            // 初始化景点位置数据
+            initSpot();
+            
+          	//获取设备数
+            getDeviceCount();
+          	
+            // 游客数量定时器
+            getTouristCurrentData();
+            touristCurrentTimer = window.setInterval(getTouristCurrentData, 1000*60);
+            
+            //游客省份数据定时器
+            getCurrentProvinceMap();
+            provinceMapTimer = window.setInterval(getCurrentProvinceMap, 1000*60);
+            
+          	//热门景点
+            getScenicByYear(cYear);
+            getScenicByYearTimer = window.setInterval(getScenicByYear, 1000*60);
+            
+            //设备实时监控
+            getDeviceMonitorData('video');
+            
+            //获取当前天气
+            getCurrentWeather();
+            weatherTimer = window.setInterval(getCurrentWeather, 5000*60*30);
+            
+            //时间
+            getNowFormatDate();
+            var getNowTimer = window.setInterval(getNowFormatDate, 60);
+            
+            //舆情列表
+            $('#newArtCountA').click(function(){
+                $(".shut-down").click();
+                $(".da-popups").show();
+             getArticleTypeDay(0,3,'day');
+            })
+            $('#todayArtCountA').click(function(){
+               $(".shut-down").click();
+               $(".da-popups").show();
+             getArticleTypeDay(0,3,'day');
+            })
+        }
+        
+        // 获取登录用户的最新5条通知公告
+        function getGovernmentNotice() {
+        	$.ajax({
+                url : "<%=basePath%>notice/governmentNotice/getNoticeNewst",
+                type : "post",
+                data : {"topNum":5},
+                datatype : "json",
+                success : function(result, textStatus) {
+                	
+                   if (result.success) {
+                  	 var data = result.data;
+                  	 $("#governmentNoticeList").empty();
+                  	 if (data != null && data.length > 0) {
+                  	 	var ahtml = '';
+                  	 	var liData;
+                  	 	var noticeTitle = '';
+                  	 	for (var i = 0; i < data.length; i++) {
+                  	 		liData = data[i];
+                  	 		noticeTitle = liData.fileIssued.title;
+                  	 		if (noticeTitle.length > 27 ) {
+                  	 			noticeTitle = noticeTitle.substring(0, 26) + '...';
+                  	 		}
+                  	 		ahtml += '<a href="javascript:void(0);" onclick="showNoticeDetail(\''+ liData.fileIssued.id +'\')">' + noticeTitle + '</a>';
+                  	 	}
+                  	 	$("#governmentNoticeList").html(ahtml);
+                  	 }
+                  	 
+                   }
+                   // 定时器5分钟获取一次
+                   governmentNoticeTimer = window.setInterval(getGovernmentNotice, 1000*60*5);
+                },
+                complete : function(XMLHttpRequest, textStatus) {
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        }
+        // 查看通知公告详情
+        function showNoticeDetail(id){
+        	openDialog("通知公告详情", "<%=basePath%>notice/governmentNotice/showTzDetail?id=" + id, 900, 330);
+        }
+        
+        // 另起一个浏览器页面跳转通知公告详情
+        function showMoreNotice(){
+        	window.open("<%=basePath %>admin/index?menuId=18484");
+        }
+         //车流量JS
+         function getCarFlowChartsTimeFun(){
+         	getCarFlowCharts(CarFlowClom,CarFlowType);
+         }
+         
+	      function getCarFlowCharts(clom,type) {
+	        CarFlowClom = clom;
+	        CarFlowType = type;
+	        $.ajax({
+	            url : "<%=basePath%>bigData/carFlow/getLinechartNew",
+	            type : "post",
+	            data : {
+	                "type" : type  //数字类型:1代表日,2代表一周,3代表一个月
+	            },
+	            datatype : "json",
+	            success : function(data, textStatus) {
+	            	if (getCarFlowChartsTimer != null) {
+	    				window.clearInterval(getCarFlowChartsTimer);
+	    				getCarFlowChartsTimer = null;
+	    			}
+	                $('#carFlowBar').html(data);
+	            },
+	            complete : function(XMLHttpRequest, textStatus) {
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	            }
+	        });
+	
+	    }
+         //舆情统计图JS
+         function getArticleChartsTimeFun(){
+         	getArticleCharts(ArticleChartstype);
+         }
+	      function getArticleCharts(type) {
+	           ArticleChartstype = type;
+	        $.ajax({
+	            url : "<%=basePath%>bigData/articleCount/getEchart",
+	            type : "post",
+	            data : {
+	                "type" : type  //数字类型:day,week,month
+	            },
+	            datatype : "json",
+	            success : function(data, textStatus) {
+	            	if (getArticleChartsTimer != null) {
+	            		  window.clearInterval(getArticleChartsTimer);
+	            		  getArticleChartsTimer = null;
+	            	}
+	                $('#articleBar').html(data);
+	            },
+	            complete : function(XMLHttpRequest, textStatus) {
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	            }
+	        });
+	
+	    }
+         
+         //舆情右下角弹窗
+         function getNewArticleData(){
+         $.ajax({
+                url : "<%=basePath%>bigData/articleCount/getNewArticleData",
+                type : "post",
+                data : {
+                },
+                datatype : "json",
+                success : function(data, textStatus) {
+                  //  $('#articleBar').html(data);
+                  $("#ArtTime").html(data.time);
+                  $("#newArtCount").html(data.newCount);
+                  $("#todayArtCount").html(data.todayCount);
+                  if($(".caveat-box").is(':hidden') && data.newCount>0){
+                     $(".caveat-icon").hide();
+                     $(".caveat-box").slideToggle();
+                     toggleArticleIconTimer = window.setInterval(toggleArticleIcon, 1000*10);
+                    }
+                },
+                complete : function(XMLHttpRequest, textStatus) {
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+         }
+         //舆情右下角闪烁图标
+         function toggleArticleIcon(){
+            $(".caveat-box").slideToggle();
+            $(".caveat-icon").show();
+            window.clearInterval(toggleArticleIconTimer);
+         }
+         function getScenicCalendarMonth(mon){
+        	 var year = $("#canYear").val();
+        	 $("#canMonth").val(mon);
+        	 getScenicCalendarCharts(year,mon);
+         }
+		function getScenicCalendarYear(year){
+       	 	var month = $("#canMonth").val();
+       	 	$("#canYear").val(year);
+        	getScenicCalendarCharts(year,month);
+         }
+         //景区流量日历
+         function getScenicCalendarCharts(year, month){
+        	 $.ajax({
+                 url : "<%=basePath%>bigData/visitor/calendarDataView",
+                 type : "post",
+                 data : {year:year,month:month},
+                 datatype : "json",
+                 success : function(data, textStatus) {
+                	 if (scenicCalendarChartsTimer != null && ($("#canYear").val() != cYear || $("#canMonth").val() != cMonth)) {
+                		 window.clearInterval(scenicCalendarChartsTimer);
+                		 scenicCalendarChartsTimer = null;
+                	 } else {
+                		 if($("#canYear").val() == cYear && $("#canMonth").val() == cMonth ){
+                		 	scenicCalendarChartsTimer = window.setInterval(getScenicCalendarCharts, 1000*60);
+                		 }
+                	 }
+                     $("#scenicCalendarDiv").html(data);
+                 },
+                 complete : function(XMLHttpRequest, textStatus) {
+                 },
+                 error : function(XMLHttpRequest, textStatus, errorThrown) {
+                 }
+             });
+         }
+        
+        function getAgesDatas(yearMonth){
+            $.ajax({
+                url : "<%=basePath%>bigData/visitor/agesDataView",
+                type : "post",
+                data : {"yearMonth":yearMonth},
+                datatype : "json",
+                success : function(data, textStatus) {
+                       $("#agesDiv").html(data)
+                },
+                complete : function(XMLHttpRequest, textStatus) {
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+            
+         }
+         
+        
+         
+        // 初始化景点位置数据
+        function initSpot(){
+	        if (spotArr != null && spotArr.length > 0) {
+	        	var divhtml = "";
+	        	$.each(spotArr, function (index, item) {
+	        		divhtml = '<div class="p1" style="left: '+item.left+'rem; top: '+item.top+'rem;">';
+	        		divhtml += '<p>'+item.name+'<span id="'+item.id+'">'+item.num+'人</span></p>';
+	        		divhtml += '<div class="circle">';
+	        		divhtml += '<div class="circle1"></div>';
+	        		divhtml += '<div class="circle2"></div>';
+	        		divhtml += '<div class="circle3"></div>';
+	        		divhtml += '</div>';
+	        		divhtml += '</div>';
+	                $("#mapPoint").append(divhtml);
+	        	});
+	        }
+       	 }
+       	 
+       	 // 游客数量统计
+       	 function getTouristCurrentData() {
+	
+	        $.ajax({
+	            url : '<%=basePath%>bigData/touristCurrent/getCountMap',
+	            type : "post",
+	            data : {},
+	            datatype : "json",
+	            success : function(result, textStatus) {
+	               if (result.success) {
+	               		// 今日接待游客数量
+	               		todayTouristData(result.data.todayNumArr);
+	               	
+	             		// 更新时间
+	             		$("#toristCurrentUpdateTime").html(result.data.toristCurrentUpdateTime);	
+	             		// 地图亚丁 景区人数
+	               		if (result.data.touristCurrentNum != null) {
+	               			$("#ydjq").html(result.data.touristCurrentNum+"人");
+	               		}
+	             		
+	               		// 本月接待人数统计
+	               		$("#monthTouristCount").html("13411人");
+	               		// 日环比
+	               		var hb = parseFloat(parseFloat(result.data.dayHb)*100).toFixed(2);
+	               		var html = '0%<i class="font-yellow icon iconfont icon-chiping"></i>';
+	               		if (hb > 0 ){
+	               			html = Math.abs(hb)+'%<i class="font-red icon iconfont icon-web-icon-"></i>';
+	               		}else if(hb < 0 ){
+	               			html = Math.abs(hb)+'%<i class="font-green icon iconfont icon-xiajiang"></i>';
+	               		}
+	               		$("#dayPercent").html(html);
+	               		
+	               		// 票务数据
+	               		var datas = result.data.ticketDatas;
+	    				var titles = result.data.ticketTitles;
+	    				var allTicketCount = result.data.allTicketCount;
+	               		ticketChart(titles, datas, allTicketCount);
+	               }
+	            },
+	            complete : function(XMLHttpRequest, textStatus) {
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	            }
+	        });
+	    }
+       	 
+         //游客省份数量统计
+         function getCurrentProvinceMap() {
+    
+            $.ajax({
+                url : "<%=basePath%>bigData/touristCurrent/getCurrentProvinceMap",
+                type : "post",
+                data : {},
+                datatype : "json",
+                success : function(result, textStatus) {
+                   if (result.success) {
+                	   if ( provinceMapTimer != null) {
+                		   window.clearInterval(provinceMapTimer);
+                		   provinceMapTimer = null;
+                	   }
+                        // 游客省份数量地图
+                        var myData = result.data.currentProvinceMap.provinceDatas;
+                        initProvinceMap(myData);
+                        // 游客省份排名数据列表
+                        var provinceData = result.data.provinceNumMap;
+                        initProvinceData(provinceData);
+                        
+                        // 游客性别比例
+                        initSexData(result.data.sexMap);
+                   }
+                },
+                complete : function(XMLHttpRequest, textStatus) {
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                }
+            });
+        }
+	    // 今日接待游客数量
+	    function todayTouristData(todayNumArr){
+	    	
+	        if (todayNumArr != null && todayNumArr.length > 0) {
+		        $("#todayNumList").empty();
+		        var lihtml = '';
+		        // 具体人数前面几位补0
+		        var zeroLiNum = 7 - todayNumArr.length;
+		        for (var i = 0 ; i< zeroLiNum; i++) {
+			        lihtml = '<li>0</li>';
+					$("#todayNumList").append(lihtml);
+		        }
+		        // 人数
+			    for (var i = 0 ; i< todayNumArr.length; i++) {
+				    lihtml = '<li>'+todayNumArr[i]+'</li>';
+					$("#todayNumList").append(lihtml);
+			    }
+	        }
+	    }
+	    
+	    // 票务统计图
+	    function ticketChart(titles, datas, allTicketCount){
+	    	var dataChart= echarts.init(document.getElementById('ticketChartDiv'));
+	    	var option = {
+			  title:{
+			  	text:'本日售票',
+			  	subtext: allTicketCount+'张',
+			    x:'center',
+			    y:'center',
+			    itemGap:5,
+			    textStyle:{
+				    fontSize: 13,
+				    fontWeight: 'bolder',
+				    color: '#fff'
+				},
+				subtextStyle:{
+					fontSize: 14,
+				    fontWeight: 'bolder',
+				    color: '#00fefe'
+				} 
+			  },
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{a} <br/>{b} : {c} ({d}%)"
+			    },
+			    legend: {
+			        orient : 'vertical',
+			        x : 'left',
+			        itemWidth:14,
+			        itemHeight:10,
+			        textStyle:{color: '#fff'},
+			        data:titles
+			    },
+			    color:['#eac127','#03d9e1'],
+			    calculable : true,
+			    series : [
+			        {
+			            name:'票务统计分析',
+			            type:'pie',
+			            radius : ['60%', '80%'],
+			            itemStyle : {
+			                normal : {
+			                    label : {
+			                        show : false
+			                    },
+			                    labelLine : {
+			                        show : false
+			                    }
+			                }
+			            },
+			            data:datas
+			        }
+			    ]
+			};
+	    
+	     	dataChart.setOption(option);
+	    }
+	    var deviceType ;    
+        //区域设备实时监控
+        function deviceMonitorClick(type){
+        	
+       		 $('[name="diviceMonitorLi"]').each(function (){
+       			 $(this).removeClass('active');
+       		 });
+       		 $(this).addClass('active');
+       		 $("#deviceStateId").val("全部");
+       		getDeviceMonitorData(type);
+       	 }
+       	
+       	 //获取区域设备实时监控
+       	 function getDeviceMonitorData(type){
+       		deviceType = type;
+       		$.ajax({
+                url:'<%=basePath%>bigData/device/deviceDataView?type='+type+'&status='+""+'&currentime='+new Date(),
+                cache: false,
+                success: function(html){
+                    $('#deviceDiv').html(html);
+                    tableScroll('tableId', 400, 30, 3);
+                }
+          });
+       	 }
+       	 
+       	 //对设备的表格进行过滤
+       	 function getDeviceByState(param){
+       		$.ajax({
+                url:'<%=basePath%>bigData/device/deviceDataView?type='+deviceType+'&status='+ param +'&currentime='+new Date(),
+                cache: false,
+                success: function(html){
+                    $('#deviceDiv').html(html);
+                    tableScroll('tableId', 400, 30, 3);
+                }
+          });
+		}
+       	 //画圈圈
+       	function drawCirlce(canvasObj,text,rate){
+    		var ctx = canvasObj.getContext("2d");
+    		var circle = {
+    	        x : 25,    //圆心的x轴坐标值
+    	        y : 25,    //圆心的y轴坐标值
+    	        r : 20     //圆的半径
+    	    };
+    		ctx.beginPath();
+    		ctx.arc(circle.x,circle.y,circle.r,0,Math.PI*2)
+    		ctx.lineWidth = 5;
+    		ctx.strokeStyle = '#163170';
+    		ctx.stroke();
+    		ctx.closePath();
+    		ctx.beginPath();
+    		ctx.arc(circle.x,circle.y,circle.r,1.5*Math.PI,(1.5+rate/100*2)*Math.PI)
+    		ctx.lineWidth = 5;
+    		ctx.lineCap = 'round';
+    		ctx.strokeStyle = '#7AEBA1';
+    		ctx.stroke();
+    		ctx.closePath();
+    		ctx.fillStyle = 'white';
+    		ctx.font = '2px Calibri';
+    		ctx.fillText(text,circle.x-10,circle.y+5);
+    	}
+       	 
+       	 function drawDeviceCount(divId,dataCount,subtext){
+       		var dataChart= echarts.init(document.getElementById(divId));
+	    	var option = {
+			  title:{
+			  	text:dataCount,
+			  	subtext:subtext ,
+			    x:'center',
+			    y:'center',
+			    itemGap:1,
+			    textStyle:{
+				    fontSize: 11,
+				    fontWeight: 'bolder',
+				    color: '#fff'
+				},
+				subtextStyle:{
+					fontSize: 11,
+				    fontWeight: 'bolder',
+				    color: '#00fefe'
+				} 
+			  },
+			    color:['#7AEBA1','#33cd99','#ff0000'],
+			    calculable : true,
+			    series : [
+			        {
+			            name:'',
+			            type:'pie',
+			            radius : ['80%', '90%'],
+			            itemStyle : {
+			                normal : {
+			                    label : {
+			                        show : false
+			                    },
+			                    labelLine : {
+			                        show : false
+			                    }
+			                }
+			            },
+			            data:[{name:'title1',value:dataCount}]
+			        }
+			    ]
+			};
+	     	dataChart.setOption(option);
+       	 }
+       	 
+       	 
+       	 //获取设备数量
+       	 var deviceCountResult = null;
+       	 
+       	 function getDeviceCount(){
+       		 $.ajax({
+ 	            url : "<%=basePath%>bigData/device/getDeviceCountMap",
+ 	            type : "post",
+ 	            datatype : "json",
+ 	            success : function(result, textStatus) {
+ 	            	//停车场
+        			var parkCount = result.parkCount;
+        			var parkNormal = parkCount.NORMALCOUNT;
+        			var parkRate = 80;
+        			var restSeatNum = parkCount.RESTSEATNUM;
+                    var totalSeatNum = parkCount.TOTALSEATNUM;
+                    //停车场空余
+                    if (restSeatNum == null) {
+                    	$('#ffcs_parking_rest_num').html(  '56<font>个</font>');
+                    } else {
+                    	$('#ffcs_parking_rest_num').html(restSeatNum+'<font>个</font>');
+                    }
+                    //停车场总数
+                    if (totalSeatNum == null) {
+                    	$('#ffcs_parking_total_num').html('停车位总数：0个');
+                    } else {
+                    	$('#ffcs_parking_total_num').html('停车位总数：'+totalSeatNum+'个');
+                    }
+                    
+                    
+                   //车辆
+        			var carCount = result.carCount;
+        			var carNormal = carCount.NORMALCOUNT;
+        			var carRate = 80;
+        			if (carNormal == null) {
+        				 $('#ffcs_vechicle_normal_num').html(0+'<font>辆</font>');
+                    } else {
+                    	 $('#ffcs_vechicle_normal_num').html(carNormal+'<font>辆</font>');
+                    }
+ 	            	
+//  	            	deviceCountResult = result;
+//  	            	alert(result);
+//             		if(result!=null) {
+            			
+            			/* var deviceCountDivHeight = $('#deviceCountDiv').innerHeight();
+            			$('[name="deviceDiv"]').each(function (){
+            				$(this).height(deviceCountDivHeight/2*0.7);
+            				
+            			});
+            			
+            			//视频
+            			 var videoCount = result.videoCount;
+            			var videoNormal = videoCount.normalCount;
+            			var videoRate = 80;
+            			drawDeviceCount('deviceCircleDivVideo',videoNormal,'正常');
+            			
+            			 
+            			
+            			
+            			//广播
+            			var radioCount = result.radioCount;
+            			var radioNormal = radioCount.normalCount;
+            			var radioRate = 80;
+            			drawDeviceCount('deviceCircleDivRadio',radioNormal,'正常');
+            			
+            			//车辆
+            			var carCount = result.carCount;
+            			var carNormal = carCount.normalCount;
+            			var carRate = 80;
+            			drawDeviceCount('deviceCircleDivCar',carNormal,'正常');
+            			//停车场
+            			var parkCount = result.parkCount;
+            			var parkNormal = parkCount.normalCount;
+            			var parkRate = 80;
+            			var restSeatNum = parkCount.restSeatNum;
+                        var totalSeatNum = parkCount.totalSeatNum;
+                        drawDeviceCountOfPercent('deviceCircleDivPark',restSeatNum,(totalSeatNum-restSeatNum),'空余');
+            			
+            			//sos设备
+            			var sosCount = result.sosCount;
+            			var sosNormal = sosCount.normalCount;
+            			var sosRate = 80;
+            			drawDeviceCount('deviceCircleDivSos',sosNormal,'正常');
+            			
+            			//wifi设备
+            			var wifiCount = result.wifiCount;
+            			var wifiNormal = wifiCount.normalCount;
+            			var wifiRate = 80;
+            			drawDeviceCount('deviceCircleDivWifi',wifiNormal,'正常'); */
+//             		}
+ 	            }
+       		 });
+       	 }
+         function drawDeviceCountOfPercent(divId,dataCountNormal,dataCountOther,subtext){
+             var dataChart= echarts.init(document.getElementById(divId));
+             var rate = dataCountNormal*100 /(dataCountNormal+dataCountOther);
+             if(rate!=null){
+                 rate= parseInt(rate);
+             }else {
+                 rate = 0;
+             }
+             var option = {
+               title:{
+                 text:dataCountNormal,
+                 subtext:subtext ,
+                 x:'center',
+                 y:'center',
+                 itemGap:1,
+                 textStyle:{
+                     fontSize: 11,
+                     fontWeight: 'bolder',
+                     color: '#fff'
+                 },
+                 subtextStyle:{
+                     fontSize: 11,
+                     fontWeight: 'bolder',
+                     color: '#00fefe'
+                 } 
+               },
+                 color:['#7AEBA1','#161670'],
+                 calculable : true,
+                 series : [
+                     {
+                         name:'',
+                         type:'pie',
+                         radius : ['70%', '90%'],
+                         itemStyle : {
+                             normal : {
+                                 label : {
+                                     show : false
+                                 },
+                                 labelLine : {
+                                     show : false
+                                 }
+                             }
+                         },
+                         data:[{name:'title1',value:dataCountNormal},
+                               {name:'title2',value:dataCountOther}]
+                     }
+                 ]
+             };
+             dataChart.setOption(option);
+          }
+       	 
+       	 // 省份游客排名列表
+       	 function initProvinceData(dataList){
+       	 	var data = null;
+       	 	$("#provinceNumUl").empty();
+       	 	if (dataList != null && dataList.length > 0) {
+       	 		var html = '';
+       	 		var name = '';
+       	 		var percent = 0;
+       	 		for(var i=0; i<dataList.length; i++){
+	       	 		data = dataList[i];
+	       	 		name = data.NAME.substr(0,2);
+	       	 		percent = data.PROPERCENT.toFixed(2);
+	       	 		html ='<li title="'+data.NAME+'">'+name+'<span>'+data.NUM+'</span><p><label title="'+percent+'%" style="width: '+percent+'%;"></label></p></li>';
+	       	 		
+	       	 		$("#provinceNumUl").append(html);
+	       	 	}
+       	 		
+       	 	} 
+       	 }
+       	 
+       	 
+       	 // 省份游客地图数据
+       	 function initProvinceMap(provinceData){
+        	$.get('<%=basePath%>resources/bigData/map/china.json', function (chinaJson) {
+					echarts.registerMap('china', chinaJson); // 注册地图
+
+					var mapChart = echarts.init(document.getElementById('provinceMap'));
+
+			  		var option = {
+			  			geo: {
+					        map: 'china',
+					        layoutCenter: ['50%', '60%'],
+					        layoutSize: "99%",
+					        label: {
+					            emphasis: {
+					                show: false
+					               // textStyle:{color: '#fff'} // 背景省份文字颜色
+					            }
+					        },
+					        itemStyle: {					// 定义样式
+					            normal: {					// 普通状态下的样式
+					                /* areaColor: '#074b7f',
+					                borderColor: '#07a6ff' */
+					                areaColor: "#074b7f",               //颜色
+								    borderColor:"#07a6ff",        //边框颜色
+								    borderWidth:1,              //柱条的描边宽度，默认不描边。
+								    borderType:"solid",         //柱条的描边类型，默认为实线，支持 'dashed', 'dotted'。
+								    barBorderRadius:0,          //柱形边框圆角半径，单位px，支持传入数组分别指定柱形4个圆角半径。
+								    shadowBlur:5,              //图形阴影的模糊大小。
+								    shadowColor:"#01c0ff",         //阴影颜色
+								    shadowOffsetX:0,            //阴影水平方向上的偏移距离。
+								    shadowOffsetY:0,            //阴影垂直方向上的偏移距离。
+								    opacity:0.4,                  //图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。
+					            },
+					            emphasis: {					// 高亮状态下的样式
+					                areaColor: '#074b7f'
+					            }
+					        }
+					    },
+					    
+						series: [
+							{
+								name: '', // series名称
+								type: 'scatter', // series图表类型
+								coordinateSystem: 'geo', // series坐标系类型
+								
+							    label: {
+							    	textStyle:{color: '#fff'},
+							    	padding: [3, 4, 5, 6],
+							    	backgroundColor:"#000",
+							    	fontSize:14,
+							    	opacity:0.3, 
+					                emphasis: {
+					                    show: true,
+					                    formatter: function (param) {
+					                    	var d = param.value[2];
+					                        return param.name + ','+d;
+					                    },
+					                    position: 'top'
+					                }
+					            },
+					            itemStyle:{
+					            	color:'#f1e524' // 点位颜色
+					            }, 
+								data:provinceData,
+								symbolSize: 7 // 点位大小
+							}
+						]
+			  		}
+
+			 		mapChart.setOption(option);
+			});
+        
+        }
+       	 //获取当前天气
+       	 function getCurrentWeather(){
+       		 $.ajax({
+  	            url : "<%=basePath%>bigData/environmentWeather/getCurrentWeather",
+  	            type : "post",
+  	            datatype : "json",
+  	            success : function(result, textStatus) {
+  	            	if(result!=null){
+            			//时间 
+            			var currentDate = new Date();
+            			var currentTimeStr = "";
+            			var month = currentDate.getMonth()+1;
+            			if(month<10){
+            				currentTimeStr+='0';
+            			}
+            			currentTimeStr+=month+".";
+            			var day = currentDate.getDate();
+            			if(day<10){
+            				currentTimeStr+='0';
+            			}
+            			currentTimeStr+=day;
+            			$('#ffcs_weather_time').html(currentTimeStr);
+            			//天气状态
+            			var tqzk =result.condTxt;
+            			var tqzkcode =result.condCode;
+            			$('#ffcs_weather_tqzk').html(tqzk);
+            			$('#ffcs_tqIcon_img').attr('src','<%=basePath %>/resources/images/bigdata/'+tqzkcode+'.png');
+            			//温度
+            			var maxTmp = result.maxTmp;
+            			var minTmp = result.minTmp;
+            			$('#ffcs_weather_tmp').html(maxTmp+'℃/'+minTmp+'℃');
+            			//风
+            			var wind = result.windDir;
+            			$('#ffcs_weather_wind').html(wind);
+            			//aqi
+            			var aqiVal = result.aqi;
+            			var aqiTxt = result.qlty;
+            			$('#ffcs_weather_aqi_val').html(aqiVal);
+            			$('#ffcs_weather_aqi_txt').html(aqiTxt);
+            			if(aqiVal<=50){
+            				var aqiHtml = '<label class="label bg-green  a-label4" id="ffcs_weather_aqi_wrynd">无</label>';
+  	            			aqiHtml+='<p id="ffcs_weather_aqi_wry">首要污染物</p>'
+                            $('#ffcs_weather_sywry').html(aqiHtml);
+            			}else {
+            				var aqiWry = "PM2.5";
+  	            			var aqiWryMaxVal = result.pm25;
+  	            			var aqiUnit="μg/m<sup>3</sup>";
+  	            			if(aqiCity.pm10>aqiWryMaxVal){
+  	            				aqiWry = "PM10";
+  	            				aqiWryMaxVal = result.pm10;
+  	            				aqiUnit="μg/m<sup>3</sup>";
+  	            			}
+  	            			if(aqiCity.no2>aqiWryMaxVal){
+  	            				aqiWry = "二氧化氮";
+	            				aqiWryMaxVal = result.no2;
+	            				aqiUnit="μg/m<sup>3</sup>";
+  	            			}
+  	            			if(aqiCity.so2>aqiWryMaxVal){
+	            				aqiWry = "二氧化硫";
+            					aqiWryMaxVal = result.so2;
+            					aqiUnit="μg/m<sup>3</sup>";
+	            			}
+	  	            		if(aqiCity.co>aqiWryMaxVal){
+	            				aqiWry = "一氧化碳";
+           						aqiWryMaxVal = result.co;
+           						aqiUnit="mg/m<sup>3</sup>";
+	            			}
+ 	  	            		if(aqiCity.o3>aqiWryMaxVal){
+	            				aqiWry = "臭氧";
+           						aqiWryMaxVal = result.o3;
+           						aqiUnit="μg/m<sup>3</sup>";
+	            			}
+	            			
+  	            			var aqiHtml = '<label class="label bg-green  a-label4" id="ffcs_weather_aqi_wrynd">'+aqiWry+'</label>';
+  	            			aqiHtml+='<p id="ffcs_weather_aqi_wry">首要污染物</p>'
+                            $('#ffcs_weather_sywry').html(aqiHtml);
+            			}    
+            			//舒适度指数
+            			var comf = result.comfBrf;
+            			
+            			var comfDegree = 5;
+            			if(comf=="舒适"){
+            				comfDegree = 5;
+            			}else if(comf=="较舒适"){
+            				comfDegree = 4;
+            			}else if(comf=="一般"){
+            				comfDegree = 3;
+            			}else if(comf=="较不舒适"){
+            				comfDegree = 2;
+            			}else if(comf=="不舒适"){
+            				comfDegree = 1;
+            			}
+            			//<i class="icon iconfont icon-xingxing"></i>
+                        var comfHtml = '';
+            			for(var i=1;i<=5;i++){
+            				if(i<=comfDegree){
+            					comfHtml+='<i class="icon iconfont icon-xingxing"></i>';
+            				}else {
+            					comfHtml+='<i class="icon iconfont icon-xingxing1"></i>';
+            				}
+            			}
+            			$('#ffcs_comf_div').html(comfHtml);
+            			$('#ffcs_comf_degree').html(comfDegree);
+  	            	}
+  	            }
+       		 });
+       	 }
+       	 // 游客男女比例
+       	 function initSexData(data){
+       	 	
+       	 	var bp = 0;
+       	 	if (data.boy != null) {
+       	 		bp = data.boy.toFixed(2)
+       	 	}
+       	 	var gp = 0;
+       	 	if (data.girl != null) {
+       	 		gp = data.girl.toFixed(2)
+       	 	}
+       	 	$("#boyPercent").html(bp);
+       	 	$("#girlPercent").html(gp);
+       	 
+       	 }
+       	 //热门景点排名
+       	 function getScenicSelYear(year){
+			getScenicByYear(year);
+        }
+       	 function getScenicByYear(year){
+       		$.ajax({
+				  url:'<%=basePath%>bigData/scenicSpotPersonYear/getScenicByYear',
+				  cache: false,
+				  data : {
+		            	"year" : year
+		            },
+				  success: function(html){
+					  if ( getScenicByYearTimer != null && year != cYear) {
+							window.clearInterval(getScenicByYearTimer);
+							getScenicByYearTimer = null;
+						} else {
+							if(getScenicByYearTimer == null  && year == cYear){
+								getScenicByYearTimer = window.setInterval(getScenicByYear, 1000*60);
+							}
+						}
+					  
+					  $('#scenicSpotPeopleDiv').html(html);
+				  }
+			});
+       	 } 
+       	 
+       	function getProMonth(mon){
+       	 	$("#proSelMon").val(mon);
+       	 	getProvinceMapByMonth();
+        }
+		function getProYear(year){
+			$("#proSelYear").val(year);
+			getProvinceMapByMonth();
+        }
+       	 // 根据年月获取省份游客数据
+       	 function getProvinceMapByMonth(){
+       		var year = $("#proSelYear").val();
+       		var month = $("#proSelMon").val();
+       	 	  $.ajax({
+	            url : "<%=basePath%>bigData/touristCurrent/getProvinceMapByMonth",
+	            type : "post",
+	            data : {
+	            	"year" : year,
+	                "month" : month
+	            },
+	            datatype : "json",
+	            success : function(result, textStatus) {
+	            	if (provinceMapTimer != null && ($("#proSelYear").val() != cYear || $("#proSelMon").val() != cMonth)) {
+	               		 window.clearInterval(provinceMapTimer);
+	               		provinceMapTimer = null;
+	               	 } else {
+	               		 if($("#proSelYear").val() == cYear && $("#proSelMon").val() == cMonth ){
+	               			provinceMapTimer = window.setInterval(getScenicCalendarCharts, 1000*60);
+	               		 }
+	               	 }
+	            	
+	                 // 游客省份数量地图
+	               	var myData = result.data.currentProvinceMap.provinceDatas;
+	               	if (myData != null && myData.length > 0) {
+	               		initProvinceMap(myData);
+	               	}else{
+	               		initProvinceMap(new Array());
+	               	}
+	               	// 游客省份排名数据列表
+	               	var provinceData = result.data.provinceNumMap;
+	               	if (provinceData != null && provinceData.length > 0) {
+	               		initProvinceData(provinceData);
+	               	}else{
+	               		initProvinceData(null);
+	               	}
+	               	// 游客性别比例
+	               	initSexData(result.data.sexMap);
+	            },
+	            complete : function(XMLHttpRequest, textStatus) {
+	            },
+	            error : function(XMLHttpRequest, textStatus, errorThrown) {
+	            }
+	        });
+       	 }
+       	 
+       	function openPage(url){
+          top.location = url;
+           // GISApplication.fun.changeDir('emergencyCommand');
+        }
+       	
+       	function getNowFormatDate() {
+       	    var date = new Date();
+       	    var seperator1 = "-";
+       	    var seperator2 = ":";
+       	    var month = date.getMonth() + 1;
+       	    var strDate = date.getDate();
+       	    if (month >= 1 && month <= 9) {
+       	        month = "0" + month;
+       	    }
+       	    if (strDate >= 0 && strDate <= 9) {
+       	        strDate = "0" + strDate;
+       	    }
+	       	 var minutes = date.getMinutes();
+	         if (minutes >= 0 && minutes <= 9) {
+	             minutes = "0" + minutes;
+	         }
+	         var seconds = date.getSeconds();
+	            if (seconds >= 0 && seconds <= 9) {
+	                seconds = "0" + seconds;
+	            }
+       	    var currentdate = "时间："+ date.getFullYear() + seperator1 + month + seperator1 + strDate
+       	            + " " + date.getHours() + seperator2 + minutes
+       	            + seperator2 + seconds;
+       	 $("#nowTime").html(currentdate);
+       	}
+       	
+      		//测试js调用exe
+	        function videoExe(){
+	          <%
+	            BufferedReader bufferedReader = null;
+	            String checkStr = "false";
+	            try {
+	                Process proc = Runtime.getRuntime().exec("tasklist /FI \"IMAGENAME eq "+"editplus.exe\"");
+	                bufferedReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+	                String line = null;
+	                while ((line = bufferedReader.readLine()) != null){
+	                  //判断是否存在
+	                    if (line.contains("editplus.exe")) {
+	                        checkStr = "true";
+	                    }
+	                }
+	                
+	            } catch (Exception e) {
+	                checkStr = "false";
+	            }finally {
+	                if (bufferedReader != null){
+	                    try {
+	                        bufferedReader.close();
+	                    } catch (Exception e2) {
+	                    }
+	                }
+	            }
+	        %>
+	        //1、ie设置--降低安全级别如 Intenet选项——安全——自定义级别——对未标记的ActiveX————启用2、路径中含空格用%20代替空格
+	        /* var strPath = "file:///E:/软件/工具/串口/sscom5.12.1/sscom5.12.1.exe";
+	        strPath = "file:///C:/Program%20Files%20(x86)/TaijiSoft/稻城视频监控平台/VideoMonitor.exe" */
+	        var strPath = "file:///C:/Program%20Files%20(x86)/EditPlus/editplus.exe";
+	        if(<%=checkStr%> == false){
+	        try{
+	          //新建一个ActiveXObject对象
+	          a = new   ActiveXObject("wscript.shell");    
+	          a.run(strPath); 
+	      }catch(e){
+	          alert('找不到文件："'+strPath+'"(或他的组件)，请检查路径是否正确！  ');
+	      }
+	     }
+	   }
+		        
+        </script>
+    </head>
+
+    <body style="background: url(<%=basePath %>resources/bigData/images/body-bg.png) left top no-repeat; background-size:100% 100%;">
+    	<div class="web-head">
+			<div class="left-menu head-menu" style="z-index:11">
+				<ul>
+					<li class="hvr-bob active"><a href="#" style="outline:none;">大数据模式</a></li>
+					<li class="hvr-bob"><a href="javascript:void(0)" onclick="openPage('<%=basePath %>gis/index/home')" style="outline:none;">地图监控中心</a></li>
+				</ul>
+			</div>
+			<div class="center-tit">稻城县大数据平台</div>
+			<div class="right-menu head-menu">
+				<ul>
+					<li class="hvr-bob"><a href="javascript:void(0)"  onclick="openPage('<%=basePath %>gis/index/home?currentTopic=topic_emergencyCommand')" style="outline:none;">应急指挥调度</a></li>
+					<li class="hvr-bob"><a onclick="videoExe()" style="outline:none;">视频模式</a></li>
+				</ul>
+			</div>
+			<!-- 扇形菜单 -->
+           	<div>
+				<button class="cn-button" id="cn-button"></button>
+				<div class="cn-wrapper" id="cn-wrapper">
+					<ul>
+						<c:forEach items="${firstModules }" var="item" varStatus="stat">
+							<li><a href="<%=basePath %>admin/index?menuId=${item.id}"><span><img src="<%=basePath %>/resources/ace/assets/images/c-menu-p${stat.count}.png"><br/>${item.title }</span></a></li>
+						</c:forEach>
+					 </ul>
+				</div>
+			</div>
+		</div>
+    
+<!--         <div class="data-head">  -->
+<!--             <div class="xitong-list" style="z-index:999;"> -->
+<!--                 <ul> -->
+<!--                   	<li class = "active"> -->
+<!--                         <a href="#" data-toggle="tab">大数据模式</a> -->
+<!--                     </li> -->
+<!--                     <li> -->
+<!--                         <a href="javascript:void(0)" onclick="openPage('../../gis/index/home');"  data-toggle="tab">地图指挥中心</a> -->
+<!--                     </li> -->
+<!--                     <li> -->
+<!--                         <a href="javascript:void(0)" data-toggle="tab" onclick="videoExe()">视频模式</a> -->
+<!--                     </li> -->
+<!--                 </ul> -->
+<!--             </div> -->
+<!--             <div class="center-tit">稻城智慧旅游集中管控平台 </div> -->
+<!--             <div style="position: absolute; right: 0.1rem; padding-top: .57rem;"><span id="nowTime" style="font-size:14px;font-weight:600;letter-spacing: normal;color:white;"></span></div> -->
+           	<!-- 扇形菜单 -->
+<!--            	<div> -->
+<!-- 				<button class="cn-button" id="cn-button"></button> -->
+<!-- 				<div class="cn-wrapper" id="cn-wrapper"> -->
+<!-- 					<ul> -->
+<!-- 						<c:forEach items="${firstModules }" var="item" varStatus="stat"> -->
+<!-- 							<li><a href="<%=basePath %>admin/index?menuId=${item.id}"><span><img src="<%=basePath %>/resources/ace/assets/images/c-menu-p${stat.count+1 }.png"><br/>${item.title }</span></a></li> -->
+<!-- 						</c:forEach> -->
+<!-- 					 </ul> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!--         </div> -->
+        <div class="content-wrap">
+            <div class="left-box">
+                <div class="column1">
+                    <div class="title">旅游舒适度</div>
+                    <div class="cont">
+                        <div class="comfort">
+                            <div class="grade" id="ffcs_comf_degree">-</div>
+                            <div class="star-box" id="ffcs_comf_div">
+                            </div>
+                            <p>舒适指数</p>
+                        </div>
+                        <div class="a-r">
+                            <div class="row weather-box">
+                                <div class="col-xs-4"><img src="<%=basePath %>/resources/images/bigdata/999.png" id="ffcs_tqIcon_img" class="tianqi-icon" /></div>
+                                <div class="col-xs-4">
+                                    <div class="date" id="ffcs_weather_time"></div>
+                                    <div class="tianqi" id="ffcs_weather_tqzk">-</div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <label class="label bg-blue a-label1" id="ffcs_weather_tmp">-</label>
+                                    <label class="label bg-green a-label2 " id="ffcs_weather_wind"  style="white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">-</label>
+                                </div>
+                            </div>
+                            <div class="aqi">
+                                <div class="row">
+                                    <div class="col-xs-4 aqi-val" id="ffcs_weather_aqi_val" >-</div>
+                                    <div class="col-xs-4">
+                                        <label class="label bg-green  a-label3" id="ffcs_weather_aqi_txt">-</label>
+                                        <p>AQI指数</p>
+                                    </div>
+                                    <div class="col-xs-4" id="ffcs_weather_sywry">
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column2 mt-2rem">
+                    <div class="title">景区流量日程表</div>
+                    <div class="cont">
+                        <div class="chart-data">
+                           <div class="select-input">
+	                            <input class="fl" type="text" placeholder=""  value="" id="calendarYear">
+	                            <div class="select-list">
+	                            	<input type="hidden" value="${currentYear }" id="canYear"/>
+	                            	<ul>
+	                                    <c:forEach items="${yearLists }" var="item">
+	                                    	<li><a href="javascript:void(0);" onclick="getScenicCalendarYear('${item.index}');">${item.name }年</a></li>
+	                                    </c:forEach>
+                                    </ul>
+	                            </div>
+                         	</div>
+                         	<div class="select-input">
+	                            <input class="fl" type="text" placeholder=""  value="" id="calendarMonth">
+	                            <div class="select-list">
+	                            	<input type="hidden" value="${currentMonth }" id="canMonth"/>
+                                    <ul>
+	                                    <c:forEach items="${monthLists }" var="item">
+	                                    	<li><a href="javascript:void(0);" onclick="getScenicCalendarMonth('${item.index}');">${item.name }月</a></li>
+	                                    </c:forEach>
+                                    </ul>
+	                            </div>
+                           </div>
+                        </div>
+                        <div class="map-chart"  id="scenicCalendarDiv"></div>
+                    </div>
+                </div>
+                <div class="column3 mt-2rem">
+                    <div class="title">全国客流来源</div>
+                    <div class="cont" style=" position: relative;">
+                        <div class="map-chart" id="provinceMap" style="height: 2.5rem;width: 2.4rem;"></div>
+                        <div style="position: absolute; top: 5px; right: 5px">
+                         	<div class="select-input">
+                                <input class="fl" type="text" id="provinceMonth" placeholder="" value="请输入">
+                                <div class="select-list">
+                                    <input type="hidden" value="${currentMonth }" id="proSelMon">
+                                    <ul>
+	                                    <c:forEach items="${monthLists }" var="item">
+	                                    	<li><a href="javascript:void(0);" onclick="getProMonth('${item.index}');">${item.name }月</a></li>
+	                                    </c:forEach>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="select-input">
+                                <input class="fl" type="text" id="provinceYear" placeholder="" value="请输入">
+                                <div class="select-list">
+                                	<input type="hidden" value="${currentYear }" id="proSelYear">
+                                	<ul>
+	                                    <c:forEach items="${yearLists }" var="item">
+	                                    	<li><a href="javascript:void(0);" onclick="getProYear('${item.index}');">${item.name }年</a></li>
+	                                    </c:forEach>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-data">
+                            
+                            <div class="gender">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="icon-wrap male"><i class="icon iconfont icon-nan"></i></div>
+                                        男生<span id="boyPercent"></span>%
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="icon-wrap female"><i class="icon iconfont icon-nv"></i></div>
+                                        女生<span id="girlPercent"></span>%
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="ranking" id="provinceNumUl">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="center-box">
+                <div class="column4">
+                    <div class="head" style="padding-right: 0px;">最近更新时间：<span id="toristCurrentUpdateTime"></span></div>
+                    <div class="receiving-tourists">
+                        <div class="text"><h3 style="margin-right:5px;">今日接待游客</h3><span >本月累计接待：<font id="monthTouristCount" style="color:#fff"></font></span><label>日环比<font id="dayPercent">0%<i class="font-green icon iconfont icon-web-icon-"></i></font></label></div>
+                       <div class="clear"></div>
+                       <ul class="num-list" id="todayNumList">
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                            <li>0</li>
+                        </ul>
+                    </div>
+                    <div class="map-point" id="mapPoint">
+                    </div>
+                    <div class="bottom-chart" style="height:1.35rem;">
+                        <h3>票务统计分析</h3>
+                        <div id="ticketChartDiv" style="height: 1.9rem;width: 4rem;"></div>
+                    </div>
+                </div>
+                <div class="column5">
+                   <%--  <div class="column5-box">
+                        
+                        <h3>游客年龄结构
+                            <div class="select-input">
+                            <input  type="text" placeholder="" value="" id="agesMonth">
+                            <div class="select-list">
+                                <ul>
+                                    <c:forEach items="${monthLists}" var="item" varStatus="ind">
+                                        <li index="${item.index }"><a href="javascript:void(0);" onclick="getAgesDatas('${item.index }')">${item.name }月</a></li>
+                                    </c:forEach>
+                                  
+                                </ul>
+                            </div>
+                        </div>
+                      </h3>
+                        
+                        <div id="agesDiv"></div>
+                    </div> --%>
+                    <div class="column5-box">
+                        <h3>稻城车流量统计<div class="select-input">
+                            <input class="fl" type="text" id="" placeholder="" value="本日">
+                            <div class="select-list">
+                                <ul>
+                                   <li><a href="javascript:void(0)" onclick="getCarFlowCharts(CarFlowClom,1)">本日</a></li>
+                                   <li><a href="javascript:void(0)" onclick="getCarFlowCharts(CarFlowClom,2)">本周</a></li>
+                                   <li><a href="javascript:void(0)" onclick="getCarFlowCharts(CarFlowClom,3)">本月</a></li>
+                                </ul>
+                            </div>
+                        </div>
+<!--                         <div class="tab-list">
+                            <ul>
+                                <li class="active"><a ref="javascript:void(0)" onclick="getCarFlowCharts('IN_FLOW',CarFlowType)" data-toggle="tab">入口</a></li>
+                                <li class=""><a ref="javascript:void(0)" onclick="getCarFlowCharts('OUT_FLOW',CarFlowType)" data-toggle="tab">出口</a></li>
+                            </ul>
+                        </div> -->
+                        <div id="carFlowBar" ></div>
+                    </div>
+                    <div class="column5-box">
+                        <h3>舆情分析<div class="select-input">
+                            <input class="fl" type="text" id="" placeholder="" value="本日">
+                            <div class="select-list">
+                                <ul>
+                                   <li><a href="javascript:void(0)" onclick="getArticleCharts('day')">本日</a></li>
+                                   <li><a href="javascript:void(0)" onclick="getArticleCharts('week')">本周</a></li>
+                                   <li><a href="javascript:void(0)" onclick="getArticleCharts('month')">本月</a></li>
+                                </ul>
+                            </div>
+                        </div></h3>
+                         <div id="articleBar"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="right-box">
+                <div class="column6">
+                    <div class="title">资源利用动态监测</div>
+                    <div class="cont">
+                    	<!-- 通知公告begin -->
+                    	<div class="message-text">
+							<a href="javascript:void(0);" class="more" onclick="showMoreNotice();">更多</a>
+							<marquee id="governmentNoticeList" scrollamount="1" direction="up" onMouseOut="this.start()" onMouseOver="this.stop()">
+							</marquee>
+						</div>
+						<!-- 通知公告end -->
+                        <div class="on-duty">
+                            <div class="icon"><img src="<%=basePath %>resources/bigData/images/icon2.png"/></div>
+                            <h3>值班人员</h3>
+							<p><span>值班领导：</span><font id="dutyUserName"></font></p>
+							<p><span>联系电话：</span><font id="dutyUserTel"></font></p>
+                            <!-- <p><span>联系人员：</span>办事员1</p> -->
+                        </div>
+                        <div class="right-chart" id="deviceCountDiv" style="text-align: center;">
+                        	<ul>
+								<li>
+									<h4>停车场空余</h4>
+									<div class="row text">
+										<div class="col-xs-4">
+											<i class="icon iconfont icon-tingchechang"></i>
+										</div>
+										<div class="col-xs-4 quantity" id="ffcs_parking_rest_num">
+											0 <font>个</font>
+										</div>
+										<div class="col-xs-4">
+											<div class="status-btn">
+												<a href="javascript:void(0)" class="">空余</a>
+											</div>
+										</div>
+									</div>
+									<p  id="ffcs_parking_total_num">停车位总数：0个</p>
+								</li>
+								<li>
+									<h4>车辆</h4>
+									<div class="row text">
+										<div class="col-xs-4">
+											<i class="icon iconfont icon-qiche"></i>
+										</div>
+										<div class="col-xs-4 quantity" id="ffcs_vechicle_normal_num">
+											0 <font>辆</font>
+										</div>
+										<div class="col-xs-4">
+											<div class="status-btn">
+												<a href="javascript:void(0)" class="">正常</a>
+											</div>
+										</div>
+									</div>
+									<p></p>
+								</li>
+							</ul>
+                            <!-- <ul>
+                                <li>
+                                	<div id="deviceCircleDivVideo" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">摄像头</div>
+                                </li>
+                                <li>
+                                	<div id="deviceCircleDivRadio" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">广播</div>
+                                </li>
+                                <li>
+                                	<div id="deviceCircleDivCar" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">车辆</div>
+                                </li>
+                                <li>
+                                	<div id="deviceCircleDivPark" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">停车场</div>
+                                </li>
+                                <li>
+                                	<div id="deviceCircleDivSos" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">SOS设备</div>
+                                </li>
+                                <li>
+                                	<div id="deviceCircleDivWifi" name="deviceDiv"><canvas name="deviceCanvas" width="70" height="50" style="margin:0px 0 0 0px;"></canvas></div>
+                                	<div style="text-align: center;">WIFI设备</div>
+                                </li>
+                            </ul> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="column7 mt-2rem">
+                    <div class="title">热门景点排名
+	                    <div class="select-input">
+	                        <input class="fl" type="text" id="scenicSelYear" placeholder="" value="请输入">
+	                        <div class="select-list">
+	                        	<ul>
+	                             <c:forEach items="${yearLists }" var="item">
+	                             	<li><a href="javascript:void(0);" onclick="getScenicSelYear('${item.index}');">${item.name }年</a></li>
+	                             </c:forEach>
+	                            </ul>
+	                        </div>
+	                    </div>
+                    </div>
+                    <div id="scenicSpotPeopleDiv" >
+                        
+                    </div>
+                </div>
+                <div class="column8 mt-2rem">
+                    <div class="title">区域设备实时监控
+                    	<div class="select-input">
+		                    <input class="fl" type="text" id="deviceStateId" placeholder="" value="全部">
+		                        <div class="select-list">
+		                        	<ul>
+		                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('');">全部</a></li>
+		                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('1');">正常</a></li>
+		                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('0');">异常</a></li>
+		                            </ul>
+		                        </div>
+		                </div>
+                    </div>
+                    <div class="cont">
+                       <div class="tab-list">
+                          <ul>
+                             <li name="diviceMonitorLi" onclick="deviceMonitorClick('video');" class="active"><a href="javascript:void(0)" data-toggle="tab">摄像头</a></li>
+                             <li name="diviceMonitorLi" onclick="deviceMonitorClick('radio');" class=""><a href="javascript:void(0)" data-toggle="tab">广播</a></li>
+                             <li name="diviceMonitorLi" onclick="deviceMonitorClick('wifi');" class=""><a href="javascript:void(0)" data-toggle="tab">WIFI</a></li>
+                             <li name="diviceMonitorLi" onclick="deviceMonitorClick('sos');" class=""><a href="javascript:void(0)" data-toggle="tab">SOS设备</a></li>
+                          </ul>
+                          
+<!--                           <div style="z-index:999; position:absolute; right:18px; top:2px;"> -->
+<!--                     		 <div> -->
+<!-- 	                        	<ul> -->
+<!-- 	                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('');">全部</a></li> -->
+<!-- 	                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('正常');">正常</a></li> -->
+<!-- 	                             	<li><a href="javascript:void(0);" onclick="getDeviceByState('异常');">异常</a></li> -->
+<!-- 	                            </ul> -->
+<!--                             </div> -->
+<!-- 	                    </div> -->
+                       </div>
+                       <div class="clear"></div>
+                       <!-- 区域设备实时监控 -->
+                        <div class="tablebox" id="deviceDiv">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!--警告按钮-->
+        <a href="#" class="caveat-icon" style="display: none"><img src="<%=basePath %>resources/bigData/images/alarm1.gif" align="absmiddle"/></a>
+        <div class="caveat-box">
+            <div class="caveat-box-tit">
+                <a href="#" class="shut-down"><img src="<%=basePath %>resources/bigData/images/shut-down1.png" /></a>舆情监测提示
+            </div>
+            <div class="caveat-box-cont">
+                <div class="img-box"><img src="<%=basePath %>resources/bigData/images/alarm1.gif" align="absmiddle"/></div>
+                <div class="text-box">
+                    <p>时间：<font id="ArtTime">2018/08/31 11:15:12</font></p>
+                    <p><a id="newArtCountA" style="color: #fff">监测：发现新的负面舆情信息<font id="newArtCount" class="font-red1">10</font>条</a></p>
+                    <p><a id="todayArtCountA" style="color: #fff">累计：今日负面舆情信息共<font id="todayArtCount" class="font-red1">10</font>条</a></p>
+                </div>
+            </div>
+        </div>
+        
+       <!--弹出框-->
+        <div class="da-popups" style="margin-top: 0; top: 20%;display:none;">
+            <div class="popups-tit"><a href="#" class="show-icon"><img src="<%=basePath %>resources/bigData/images/shut-down1.png" /></a>舆情监测提示</div>
+            <div id="listArtiCotent" class="popups-cont"  style="height: 561px;">
+
+            </div>
+            
+          <form action="<%=basePath %>/bigData/articleCount/searchList" id="artiResourcesForm">
+            <input type="hidden" name="currentPage" id="artipageNo" value="0" />
+            <input type="hidden" name="pageSize" id="artipageSize" value="10" />
+            <input type="hidden" name="statusName" id="statusName" value="" />
+            <input type="hidden" name="Aritname" id="Aritname" value="" />
+            <input type="hidden" name="Atriday" id="Atriday" value="" />
+            <input type="hidden" name="orderBy" id="orderBy" value="desc_date" />
+        </form>
+        </div>
+        <a href="<%=basePath%>login.htm" class="return-btn"><img src="<%=basePath %>/resources/gisStyle/images/reBtn.png" /> </a>
+        
+        <script type="text/javascript" src="<%=basePath %>resources/bigData/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="<%=basePath %>resources/bigData/js/jquery.nicescroll.js" ></script>
+         <script type="text/javascript" src="<%=basePath %>resources/bigData/js/common.js" ></script>
+        <link rel="stylesheet" type="text/css" href="<%=basePath%>resources/pagination/pagination.css">  
+        <script type="text/javascript" src="<%=basePath%>resources/framework/script/jquery.form.js"></script>
+        <script type="text/javascript" src="<%=basePath%>resources/pagination/jquery.pagination.js"></script>
+        <script src="<%=basePath%>resources/layer/layer.js"></script>
+        <script>
+        
+  			 function getResourceContent(pageNo){
+		        $("#artipageNo").val(pageNo);
+		        $('#listArtiCotent').html('');
+		        var index = layer.load(0, {shade: false}); 
+		        $('#artiResourcesForm').ajaxSubmit(function(data) {
+		            $('#listArtiCotent').html(data);
+		            layer.closeAll();
+		        });
+		    }
+		    function getArticleType(pageNo,type){
+		        $('#statusName').val(type);
+		        $('#Atriday').val('');
+		        getResourceContent(pageNo)
+		    }  
+		    function getArticleTypeDay(pageNo,type,day){
+		        $('#statusName').val(type);
+		         $('#Atriday').val(day);
+		        getResourceContent(pageNo)
+		    }  
+    
+            $(".caveat-icon").click(function(){
+                $(".caveat-box").slideToggle();
+                $(".caveat-icon").hide();
+            });
+            //$(".caveat-box").is(':hidden');
+            
+            $(".shut-down").click(function(){
+                $(".caveat-box").slideToggle();
+                window.clearInterval(toggleArticleIconTimer);
+            });
+            
+            $(".show-icon").click(function(){
+                $(".da-popups").hide();
+            });
+            
+            $(".select-input").on("click",function(){
+                if($(this).find(".select-list").is(":hidden")){
+                    $(this).find(".select-list").show();    //如果元素为隐藏,则将它显现
+                }else{
+                    $(this).find(".select-list").hide();     //如果元素为显现,则将其隐藏
+                }
+            });
+            
+            $(".select-list li").on("click",function(){
+            	var inputval = $(this).text();
+                var inputval2 = $(this).attr("index");
+                $(this).parents(".select-input").children("input:first-child").val(inputval)
+                $(this).parents(".select-input").children("input:last-child").val(inputval2)
+            });
+            
+            $('.select-list').niceScroll({
+                cursorcolor: "#cfcfd2",//#CC0071 光标颜色
+                cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+                touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+                cursorwidth: "5px", //像素光标的宽度
+                cursorborder: "0", //   游标边框css定义
+                cursorborderradius: "10px",//以像素为光标边界半径
+                autohidemode: false //是否隐藏滚动条
+            });
+//             $("#scenicSpotPeopleDiv").niceScroll({  
+// 				cursorcolor:"#dfdfdf",  
+// 				cursoropacitymax:5,  
+// 				touchbehavior:false,  
+// 				cursorwidth:"5",  
+// 				cursorborder:"5",  
+// 				cursorborderradius:"5"  
+// 			});
+            //表格无缝滚动
+//             tableScroll('tableId', 400, 30, 5)
+            var MyMarhq;            
+            function tableScroll(tableid, hei, speed, len) {
+                clearTimeout(MyMarhq);
+                $('#' + tableid).parent().find('.tableid_').remove()
+                $('#' + tableid).parent().prepend(
+                    '<table class="tableid_"><thead>' + $('#' + tableid + ' thead').html() + '</thead></table>'
+                ).css({
+                    'position': 'relative',
+                    'overflow': 'hidden',
+                    //'height': hei + 'px'
+                })
+                $(".tableid_").find('th').each(function(i) {
+                    $(this).css('width', $('#' + tableid).find('th:eq(' + i + ')').width());
+                });
+                $(".tableid_").css({
+                    'position': 'absolute',
+                    'top': 0,
+                    'left': 0,
+                    'z-index': 9
+                })
+                $('#' + tableid).css({
+                    'position': 'absolute',
+                    'top': 0,
+                    'left': 0,
+                    'z-index': 1
+                })
+            	var count = $('#' + tableid).find('tbody').find("tr").length;
+                if ( count > len) {
+                    $('#' + tableid).find('tbody').html($('#' + tableid).find('tbody').html() + $('#' + tableid).find('tbody').html());
+                    $(".tableid_").css('top', 0);
+                    $('#' + tableid).css('top', 0);
+                    var tblTop = 0;
+                    var outerHeight = $('#' + tableid).find('tbody').find("tr").outerHeight();
+            		
+                    function Marqueehq() {
+                        if (tblTop <= -outerHeight * count) {
+                            tblTop = 0;
+                        } else {
+                            tblTop -= 1;
+                        }
+                        $('#' + tableid).css('margin-top', tblTop + 'px');
+                        clearTimeout(MyMarhq);
+                        MyMarhq = setTimeout(function() {
+                            Marqueehq()
+                        }, speed);
+                    }
+            
+                    MyMarhq = setTimeout(Marqueehq, speed);
+                    $('#' + tableid).find('tbody').hover(function() {
+                        clearTimeout(MyMarhq);
+                    }, function() {
+                        clearTimeout(MyMarhq);
+                        if (count > len) {
+                            MyMarhq = setTimeout(Marqueehq, speed);
+                        }
+                    })
+                }
+            
+            }
+            
+            
+        </script>
+    </body>
+
+</html>
